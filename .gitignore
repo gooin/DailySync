@@ -1,3 +1,5 @@
 dist
 node_modules
 *.log
+garmin_fit_files
+./src/constant.my.ts

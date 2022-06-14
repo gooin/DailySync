@@ -18,12 +18,14 @@
     "axios": "^0.24.0",
     "express": "^4.17.1",
     "form-data": "^4.0.0",
+    "garmin-connect": "^1.4.3",
     "google-auth-library": "^8.0.2",
     "googleapis": "^100.0.0",
     "lodash": "^4.17.21",
     "node-fetch": "^3.2.5",
     "qs": "^6.10.3",
-    "strava-v3": "^2.1.0"
+    "strava-v3": "^2.1.0",
+    "unzipper": "^0.10.11"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
