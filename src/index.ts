@@ -46,8 +46,10 @@ export const run = async () => {
     } else {
         // console.log('finalResult', finalResult);
         await insertDataToSheets(finalResult);
-        //    下载佳明原始数据
+        // 下载佳明原始数据
         const filePath = await downloadGarminActivity(activityId);
+        // 上传到佳明国际区
+        await uploadGarminActivity(filePath);
 
     }
 
@@ -57,10 +59,11 @@ try {
     run();
     // getStravaUserInfo();
     // getLatestActivityIdInSheets();
-    // downloadGarminActivity('191753473').then(res => {
+    // downloadGarminActivity('190727967').then(res => {
     //     console.log(res);
     //     uploadGarminActivity(res);
     // });
+    // uploadGarminActivity('./garmin_fit_files/191409924_ACTIVITY.fit');
 
 } catch (e) {
     axios.get(

@@ -28,6 +28,18 @@
     qs "^6.10.3"
     request "^2.88.2"
 
+"@gooin/garmin-connect@^1.4.4":
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/@gooin/garmin-connect/-/garmin-connect-1.4.4.tgz#18ede20deb0eef35f4d431cda33d923942106a61"
+  integrity sha512-JowApG0vD/PhtXWp63TVQVXsDbOl71nYSp23RRg8S6yLiobKpdvw/NqXlfylmeXF7NBVEPtEA470PWcmjrVOuQ==
+  dependencies:
+    app-root-path "^3.0.0"
+    axios "^0.26.1"
+    cloudscraper "^4.6.0"
+    form-data "^4.0.0"
+    qs "^6.10.3"
+    request "^2.88.2"
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.nlark.com/@sindresorhus/is/download/@sindresorhus/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
