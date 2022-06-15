@@ -108,7 +108,16 @@ export const downloadGarminActivity = async (activityId, client = null): Promise
     await fs.createReadStream(originZipFile)
         .pipe(unzipper.Extract({ path: downloadDir }));
     const fitFilePath = `${downloadDir}/${activityId}_ACTIVITY.fit`;
-    console.log('fitFilePath', fitFilePath);
+    try {
+        if (fs.existsSync(fitFilePath)) {
+            console.log('saved fitFilePath', fitFilePath);
+            //file exists
+            return fitFilePath;
+        }
+    } catch (err) {
+        console.error(err);
+        core.setFailed(err);
+    }
     return fitFilePath;
 };
 
