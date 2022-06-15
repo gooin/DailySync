@@ -113,6 +113,12 @@ export const downloadGarminActivity = async (activityId, client = null): Promise
             console.log('saved fitFilePath', fitFilePath);
             //file exists
             return fitFilePath;
+        } else {
+            const existFiles = fs.readdirSync(downloadDir, { withFileTypes: true })
+                .filter(item => !item.isDirectory())
+                .map(item => item.name);
+            console.log('fitFilePath not exist, curr existFiles', fitFilePath, existFiles);
+            return Promise.reject('file not exist ' + fitFilePath);
         }
     } catch (err) {
         console.error(err);
