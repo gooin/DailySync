@@ -41,7 +41,7 @@ export const run = async () => {
     console.log('update all data', data);
     const finalResult = _.values(data);
     const latestActivityIdInSheets = await getLatestActivityIdInSheets();
-    if (latestActivityIdInSheets === activityId) {
+    if (latestActivityIdInSheets === String(activityId)) {
         console.log('=== 没有需要更新的数据！，快去跑步！===');
     } else {
         // console.log('finalResult', finalResult);
