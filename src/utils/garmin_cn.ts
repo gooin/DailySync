@@ -107,6 +107,8 @@ export const downloadGarminActivity = async (activityId, client = null): Promise
     const originZipFile = downloadDir + '/' + activityId + '.zip';
     await fs.createReadStream(originZipFile)
         .pipe(unzipper.Extract({ path: downloadDir }));
+    // waiting 3s for extract zip file
+    await new Promise(resolve => setTimeout(resolve, 30000));
     const fitFilePath = `${downloadDir}/${activityId}_ACTIVITY.fit`;
     try {
         if (fs.existsSync(fitFilePath)) {
@@ -117,7 +119,8 @@ export const downloadGarminActivity = async (activityId, client = null): Promise
             const existFiles = fs.readdirSync(downloadDir, { withFileTypes: true })
                 .filter(item => !item.isDirectory())
                 .map(item => item.name);
-            console.log('fitFilePath not exist, curr existFiles', fitFilePath, existFiles);
+            console.log('fitFilePath', fitFilePath);
+            console.log('fitFilePath not exist, curr existFiles', existFiles);
             return Promise.reject('file not exist ' + fitFilePath);
         }
     } catch (err) {
