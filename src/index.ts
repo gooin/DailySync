@@ -17,7 +17,7 @@ import {
 } from './constant';
 import { getStravaUserInfo } from './utils/strava';
 import { getLatestActivityIdInSheets, getLatestSheetsData, insertDataToSheets } from './utils/google_sheets';
-import { downloadGarminActivity, getGarminStatistics } from './utils/garmin_cn';
+import { downloadGarminActivity, getGarminStatistics, syncGarminCN2GarminGlobal } from './utils/garmin_cn';
 import { getRQOverView } from './utils/runningquotient';
 import { uploadGarminActivity } from './utils/garmin_gobal';
 
@@ -52,19 +52,11 @@ export const run = async () => {
         await uploadGarminActivity(filePath);
 
     }
-
 };
+
 
 try {
     run();
-    // getStravaUserInfo();
-    // getLatestActivityIdInSheets();
-    // downloadGarminActivity('190727967').then(res => {
-    //     console.log(res);
-    //     uploadGarminActivity(res);
-    // });
-    // uploadGarminActivity('./garmin_fit_files/191409924_ACTIVITY.fit');
-
 } catch (e) {
     axios.get(
         `https://api.day.app/${BARK_KEY}/同步数据运行失败了，快去检查！/${e.message}`);

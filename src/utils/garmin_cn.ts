@@ -1,12 +1,14 @@
+import { getGaminGlobalClient, uploadGarminActivity } from './garmin_gobal';
+import { GARMIN_PASSWORD_DEFAULT, GARMIN_URL_DEFAULT, GARMIN_USERNAME_DEFAULT } from '../constant';
+
 const { GarminConnect } = require('@gooin/garmin-connect-cn');
+const { GarminConnect: GarminConnectGlobal } = require('@gooin/garmin-connect');
 const core = require('@actions/core');
 const axios = require('axios');
 const _ = require('lodash');
 const fs = require('fs');
 const unzipper = require('unzipper');
 export const downloadDir = './garmin_fit_files';
-
-import { GARMIN_PASSWORD_DEFAULT, GARMIN_URL_DEFAULT, GARMIN_USERNAME_DEFAULT } from '../constant';
 
 const GARMIN_USERNAME = process.env.GARMIN_USERNAME ?? GARMIN_USERNAME_DEFAULT;
 const GARMIN_PASSWORD = process.env.GARMIN_PASSWORD ?? GARMIN_PASSWORD_DEFAULT;
@@ -85,16 +87,18 @@ export const getGarminStatistics = async () => {
 /**
  * 下载 garmin 活动原始数据，并解压保存到本地
  * @param activityId
+ * @param client clientInstance
  */
-export const downloadGarminActivity = async (activityId): Promise<string> => {
+export const downloadGarminActivity = async (activityId, client = null): Promise<string> => {
     if (!fs.existsSync(downloadDir)) {
         fs.mkdirSync(downloadDir);
     }
-    const GCClient = new GarminConnect();
-// Uses credentials from garmin.config.json or uses supplied params
-    await GCClient.login(GARMIN_USERNAME, GARMIN_PASSWORD);
-    const userInfo = await GCClient.getUserInfo();
-    // console.log('userInfo', userInfo);
+    let GCClient = client ?? new GarminConnect();
+    if (!client) {
+        await GCClient.login(GARMIN_USERNAME, GARMIN_PASSWORD);
+        const userInfo = await GCClient.getUserInfo();
+        // console.log('userInfo', userInfo);
+    }
 
 // Use the id as a parameter
     const activity = await GCClient.getActivity({ activityId: activityId });
@@ -107,3 +111,38 @@ export const downloadGarminActivity = async (activityId): Promise<string> => {
     console.log('fitFilePath', fitFilePath);
     return fitFilePath;
 };
+
+export const getGaminCNClient = async () => {
+    const GCClient = new GarminConnect();
+// Uses credentials from garmin.config.json or uses supplied params
+    await GCClient.login(GARMIN_USERNAME, GARMIN_PASSWORD);
+    const userInfo = await GCClient.getUserInfo();
+    console.log('userInfo cn', userInfo);
+    return GCClient;
+};
+
+export const syncGarminCN2GarminGlobal = async (count = 200) => {
+    const waitTime = 2000; //ms
+    const actIndex = 0;
+    // const actPerGroup = 10;
+    const totalAct = count;
+
+    const GCClient = await getGaminCNClient();
+    const GCClientGlobal = await getGaminGlobalClient();
+
+    const actSlices = await GCClient.getActivities(actIndex, totalAct);
+    const runningActs = _.filter(actSlices, { activityType: { typeKey: 'running' } });
+    for (let j = 0; j < runningActs.length; j++) {
+        const act = runningActs[j];
+        // console.log({ act });
+
+        // 下载佳明原始数据
+        const filePath = await downloadGarminActivity(act.activityId, GCClient);
+        // 上传到佳明国际区
+        console.log('upload: ', j, act.activityName, act.activityId, act.startTimeLocal);
+        await uploadGarminActivity(filePath, GCClientGlobal);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+    }
+
+};
+

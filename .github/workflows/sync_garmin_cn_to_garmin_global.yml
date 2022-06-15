@@ -1,0 +1,27 @@
+name: Sync Garmin CN to Garmin Global
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  BARK_KEY: ${{ secrets.BARK_KEY }}
+  GARMIN_USERNAME: ${{ secrets.GARMIN_USERNAME }}
+  GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+  GARMIN_GLOBAL_USERNAME: ${{ secrets.GARMIN_GLOBAL_USERNAME }}
+  GARMIN_GLOBAL_PASSWORD: ${{ secrets.GARMIN_GLOBAL_PASSWORD }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Sync Garmin CN to Garmin Global
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+          cache: 'yarn'
+      - run: yarn
+      - run: yarn sync
