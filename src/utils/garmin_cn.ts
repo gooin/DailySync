@@ -141,7 +141,7 @@ export const getGaminCNClient = async () => {
 
 export const syncGarminCN2GarminGlobal = async (count = 200) => {
     const waitTime = 2000; //ms
-    const actIndex = 0;
+    const actIndex = 200;
     // const actPerGroup = 10;
     const totalAct = count;
 
